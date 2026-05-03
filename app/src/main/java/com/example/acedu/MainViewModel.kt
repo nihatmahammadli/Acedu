@@ -13,6 +13,6 @@ class MainViewModel @Inject constructor() : ViewModel() {
     private val _isReady = MutableStateFlow(true)
     val isReady = _isReady.asStateFlow()
 
-    private val _startDestination = MutableStateFlow(Screen.Dashboard.route)
+    private val _startDestination = MutableStateFlow(Screen.Splash.route)
     val startDestination = _startDestination.asStateFlow()
 }

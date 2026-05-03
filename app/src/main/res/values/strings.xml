@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Acedu</string>
+    <string name="error_unknown">An error occurred</string>
+    <string name="error_server">Something went wrong. Please try again later.</string>
 </resources>

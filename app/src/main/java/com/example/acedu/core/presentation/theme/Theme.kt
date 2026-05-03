@@ -1,57 +1,91 @@
 package com.example.acedu.core.presentation.theme
 
-import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
+import android.app.Activity
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = PrimaryBlue,
+    onPrimary = Surface,
+    primaryContainer = PrimaryContainer,
+    onPrimaryContainer = Surface,
+    secondary = SecondaryContainer,
+    onSecondary = OnSecondaryContainer,
+    background = Surface,
+    onBackground = OnSurface,
+    surface = Surface,
+    onSurface = OnSurface,
+    surfaceVariant = SurfaceContainerLow,
+    onSurfaceVariant = OnSurfaceVariant,
+    error = ErrorRed,
+    outline = OutlineVariant,
+    outlineVariant = OutlineVariant
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+val LocalAceduColors = staticCompositionLocalOf { AceduColors() }
+val LocalAceduDimens = staticCompositionLocalOf { Dimensions() }
+val LocalAceduShapes = staticCompositionLocalOf { AceduCustomShapes() }
+val LocalAceduTextStyles = staticCompositionLocalOf { AceduTextStyles() }
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
-)
+object AceduTheme {
+    val colors: AceduColors
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalAceduColors.current
+
+    val dimens: Dimensions
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalAceduDimens.current
+
+    val shapes: AceduCustomShapes
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalAceduShapes.current
+
+    val textStyles: AceduTextStyles
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalAceduTextStyles.current
+}
 
 @Composable
 fun AceduTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    colors: AceduColors = AceduColors(),
+    dimens: Dimensions = Dimensions(),
+    shapes: AceduCustomShapes = AceduCustomShapes(),
+    textStyles: AceduTextStyles = AceduTextStyles(),
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+    val view = LocalView.current
+    
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = (view.context as Activity).window
+            val insetsController = WindowCompat.getInsetsController(window, view)
+            insetsController.isAppearanceLightStatusBars = false
+            insetsController.isAppearanceLightNavigationBars = false
         }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
     }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
-    )
+    CompositionLocalProvider(
+        LocalAceduColors provides colors,
+        LocalAceduDimens provides dimens,
+        LocalAceduShapes provides shapes,
+        LocalAceduTextStyles provides textStyles
+    ) {
+        MaterialTheme(
+            colorScheme = DarkColorScheme,
+            typography = Typography,
+            shapes = AceduShapes,
+            content = content
+        )
+    }
 }

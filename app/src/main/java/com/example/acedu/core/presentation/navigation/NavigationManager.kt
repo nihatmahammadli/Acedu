@@ -14,7 +14,8 @@ interface NavigationManager {
         screen: Screen,
         popUpTo: Screen? = null,
         inclusive: Boolean = false,
-        clearBackStack: Boolean = false
+        clearBackStack: Boolean = false,
+        launchSingleTop: Boolean = false
     )
 
     fun navigateBack(): Boolean
@@ -28,7 +29,8 @@ class NavigationManagerImpl(
         screen: Screen,
         popUpTo: Screen?,
         inclusive: Boolean,
-        clearBackStack: Boolean
+        clearBackStack: Boolean,
+        launchSingleTop: Boolean
     ) {
         navController.navigate(screen.route) {
             when {
