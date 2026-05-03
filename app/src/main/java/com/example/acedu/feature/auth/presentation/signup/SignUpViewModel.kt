@@ -61,7 +61,7 @@ class SignUpViewModel @Inject constructor() : BaseViewModel<SignUpUiState>() {
                     delay(2000) // Simulate network call
                 },
                 onSuccess = {
-                    // Navigation or Success logic here
+                    updateState { it.copy(isSignUpSuccess = true) }
                 }
             )
         }

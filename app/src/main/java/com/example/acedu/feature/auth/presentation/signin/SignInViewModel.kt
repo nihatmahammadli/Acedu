@@ -23,6 +23,10 @@ class SignInViewModel @Inject constructor() : BaseViewModel<SignInUiState>() {
         updateState { it.copy(rememberMe = rememberMe) }
     }
 
+    fun onForgotPasswordClick() {
+        navigateTo(Screen.ForgotPassword)
+    }
+
     fun onLoginClick() {
         val email = currentState.email
         val password = currentState.password
